@@ -1,70 +1,77 @@
-# Getting Started with Create React App
+# 📘 Cahier des Charges – Application de Prise de Notes
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## 1. Contexte et objectifs
 
-## Available Scripts
+Ce projet a pour objectif de créer une **application web de prise de notes** utilisant une stack moderne :
+- **Frontend** : React
+- **Backend** : Node.js avec Express
+- **Base de données** : MongoDB
+- **Conteneurisation** : Docker & Docker Compose
 
-In the project directory, you can run:
+L'utilisateur pourra ajouter, consulter et visualiser ses notes de manière simple à travers une interface web conviviale.
 
-### `npm start`
+---
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## 2. Fonctionnalités attendues
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### Fonctionnalités principales :
+- 📝 **Création de note** : l'utilisateur peut saisir un texte et l'enregistrer.
+- 📖 **Affichage des notes** : toutes les notes enregistrées sont listées.
+- 🗑️ (Facultatif) **Suppression de note** : l'utilisateur peut supprimer une note.
 
-### `npm test`
+---
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## 3. Architecture technique
 
-### `npm run build`
+### 3.1 Frontend (React)
+- Interface utilisateur simple en React.
+- Consommation de l’API REST du backend.
+- Application servie via Nginx dans un conteneur Docker.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### 3.2 Backend (Node.js / Express)
+- API REST avec deux routes principales :
+  - `GET /api/notes` : récupérer toutes les notes.
+  - `POST /api/notes` : ajouter une nouvelle note.
+- Connexion à une base de données MongoDB.
+- Serveur tournant sur le port 5000 dans un conteneur Docker.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### 3.3 Base de données (MongoDB)
+- Stockage des notes sous forme de documents avec un champ `content`.
+- Volume Docker pour la persistance des données.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### 3.4 Déploiement (Azure)
 
-### `npm run eject`
+L’application complète sera **déployée sur Microsoft Azure** à l’aide des services suivants :
+- **Azure Container Instances** ou **Azure App Service** pour héberger les conteneurs Docker (frontend et backend).
+- **Azure Cosmos DB (MongoDB API)** ou une instance MongoDB déployée dans une VM Docker.
+- Un **nom DNS personnalisé** sera configuré pour accéder à l'application en ligne.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+Objectif : permettre l’accès à l’application via un navigateur, sans configuration locale, et s'initier à la mise en production cloud.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+---
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## 4. Conteneurisation
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+Utilisation de **Docker** pour isoler chaque composant de l’application :
+- Un conteneur pour le frontend
+- Un conteneur pour le backend
+- Un conteneur pour MongoDB
 
-## Learn More
+### Docker Compose
+- Définition de l’ensemble des services dans un fichier `docker-compose.yml`.
+- Réseau interne pour la communication entre services.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+---
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## 5. Dépendances et prérequis
 
-### Code Splitting
+- **Docker** et **Docker Compose** installés.
+- Connaissances de base en JavaScript / Node.js / React recommandées.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+---
 
-### Analyzing the Bundle Size
+## 6. Livrables
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- Code source complet (frontend, backend, Dockerfiles).
+- Fichier `docker-compose.yml`.
+- Ce cahier des charges (`CDC.md` en markdown).
