@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  frontend:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    container_name: notes-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - notes-network
+
+  backend:
+    build: 
+      context: ../notes-app-backend
+      dockerfile: Dockerfile
+    container_name: notes-backend
+    restart: always
+    ports:
+      - "5000:5000"
+    environment:
+      - PORT=5000
+      - MONGODB_URI=mongodb://mongo:27017/notesapp
+      - NODE_ENV=development
+    depends_on:
+      - mongo
+    networks:
+      - notes-network
+
+  mongo:
+    image: mongo:latest
+    container_name: notes-mongo
+    restart: always
+    volumes:
+      - mongo-data:/data/db
+    ports:
+      - "27017:27017"
+    networks:
+      - notes-network
+
+networks:
+  notes-network:
+    driver: bridge
+
+volumes:
+  mongo-data:
+    driver: local 
