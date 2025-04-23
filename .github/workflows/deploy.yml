@@ -13,7 +13,6 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-        
       - name: Setup SSH
         uses: webfactory/ssh-agent@v0.8.0
         with:
@@ -31,15 +30,16 @@ jobs:
         run: |
           ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "
             echo 'Pulling latest images from GHCR...'
-            sudo su
-            docker pull ghcr.io/takenotes-app/notes-frontend:latest
-            docker pull ghcr.io/takenotes-app/notes-backend:latest
+            # Use sudo for Docker commands
+            sudo docker pull ghcr.io/takenotes-app/notes-frontend:latest
+            sudo docker pull ghcr.io/takenotes-app/notes-backend:latest
             
             echo 'Deploying with Docker Compose...'
-            cd /home/ubuntu
-            docker compose down
-            docker compose up -d
+            cd /home/${{ secrets.SSH_USER }}
+            # Use sudo for docker-compose commands
+            sudo docker compose down
+            sudo docker compose up -d
             
             echo 'Deployment complete. Checking container status...'
-            docker ps
+            sudo docker ps
           "
