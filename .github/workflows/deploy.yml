@@ -31,6 +31,7 @@ jobs:
         run: |
           ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "
             echo 'Pulling latest images from GHCR...'
+            sudo su
             docker pull ghcr.io/takenotes-app/notes-frontend:latest
             docker pull ghcr.io/takenotes-app/notes-backend:latest
             
