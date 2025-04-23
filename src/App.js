@@ -3,7 +3,7 @@ import ReactMarkdown from 'react-markdown';
 import './App.css';
 
 // API base URL from environment or default
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost/api';
+const API_URL = process.env.REACT_APP_API_URL || 'http://notes.minesword.fr/api';
 
 function App() {
   const [notes, setNotes] = useState([]);
