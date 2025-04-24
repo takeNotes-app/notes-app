@@ -1,42 +1,30 @@
-FROM node:18-alpine as build
-
+# Stage 1: build your React/Angular/etc.
+FROM node:18-alpine AS build
 WORKDIR /app
-
-# Copy package files and install dependencies
 COPY package.json ./
 RUN npm install
-
-# Copy application files
 COPY public ./public
-COPY src ./src
-
-# Build the app
+COPY src    ./src
 RUN npm run build
 
-# Production environment
-FROM nginx:1.28.0-alpine
+# Stage 2: serve it with unprivileged NGINX
+FROM nginxinc/nginx-unprivileged:1.26.3-alpine
 
-# Create non-root user for nginx
-RUN addgroup -S appgroup && adduser -S appuser -G appgroup
-
-# Create required directories and set permissions
-RUN mkdir -p /run /var/cache/nginx /var/run && \
-    chown -R appuser:appgroup /run /var/cache/nginx /var/run
-
-# Copy build from the previous stage
+# 1) Copy your build artifacts into NGINX’s webroot
 COPY --from=build /app/build /usr/share/nginx/html
-RUN chown -R appuser:appgroup /usr/share/nginx/html
 
-# Copy nginx config
+# 2) Make sure the nginx user (UID 101) can read/execute
+RUN chmod -R a+rX /usr/share/nginx/html
+
+# 3) Drop in your custom config (must listen on 8080)
 COPY nginx.conf /etc/nginx/nginx.conf
 
-# Add healthcheck
+# 4) Tell Docker what port NGINX is using
+EXPOSE 8080
+
+# 5) Healthcheck against the unprivileged port
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-  CMD wget --no-verbose --tries=1 --spider http://localhost:80/health || exit 1
+  CMD wget --no-verbose --tries=1 --spider http://localhost:8080/health || exit 1
 
-EXPOSE 80
-
-# Switch to non-root user
-USER appuser
-
+# 6) Run NGINX in the foreground (already as non-root)
 CMD ["nginx", "-g", "daemon off;"]
