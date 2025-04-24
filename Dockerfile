@@ -17,7 +17,7 @@ COPY .env* ./
 RUN npm run build
 
 # Production environment
-FROM nginx:stable-alpine
+FROM nginx:1.28.0-alpine
 
 # Copy build from the previous stage
 COPY --from=build /app/build /usr/share/nginx/html
