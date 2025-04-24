@@ -20,15 +20,15 @@ FROM nginx:1.28.0-alpine
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup
 
 # Create required directories and set permissions
-RUN mkdir -p /var/cache/nginx /var/run && \
-    chown -R appuser:appgroup /var/cache/nginx /var/run
+RUN mkdir -p /run /var/cache/nginx /var/run && \
+    chown -R appuser:appgroup /run /var/cache/nginx /var/run
 
 # Copy build from the previous stage
 COPY --from=build /app/build /usr/share/nginx/html
 RUN chown -R appuser:appgroup /usr/share/nginx/html
 
 # Copy nginx config
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY nginx.conf /etc/nginx/nginx.conf
 
 # Add healthcheck
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
